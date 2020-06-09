@@ -19,6 +19,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.IO.Pipelines;
+using IoUring.Transport;
 
 namespace Benchmarks
 {
@@ -172,6 +174,22 @@ namespace Benchmarks
                         }
 
                         Console.WriteLine($"Using Sockets with {socketOptions.IOQueueCount} threads");
+                    });
+                }
+                else if (string.Equals(kestrelTransport, "IoUring", StringComparison.OrdinalIgnoreCase))
+                {
+                    webHostBuilder.ConfigureServices(services =>
+                    {
+                        services.AddIoUringTransport(options =>
+                        {
+                            options.ApplicationSchedulingMode = PipeScheduler.Inline;
+                            if (threadCount > 0)
+                            {
+                                options.ThreadCount = threadCount;
+                            }
+
+                            Console.WriteLine($"Using io_uring with {options.ThreadCount} threads");
+                        });
                     });
                 }
                 else if (string.IsNullOrEmpty(kestrelTransport))

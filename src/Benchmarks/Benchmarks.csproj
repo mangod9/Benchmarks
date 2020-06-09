@@ -110,7 +110,9 @@
   </ItemGroup>
   
   <ItemGroup Condition="$(TargetFramework) == 'netcoreapp5.0' or $(TargetFramework) == 'net5.0'">
-      <!-- Floating versions that matches the ASP.NET one while not stabilized -->
+    <PackageReference Include="IoUring.Transport" Version="0.3.0-beta1" />
+    
+    <!-- Floating versions that matches the ASP.NET one while not stabilized -->
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="$(MicrosoftAspNetCoreAppPackageVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(MicrosoftAspNetCoreAppPackageVersion)" />
 

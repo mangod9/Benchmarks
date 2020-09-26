@@ -216,6 +216,14 @@ namespace SignalRClient
             {
                 _stopped = true;
                 _workTimer.Stop();
+                foreach (var connection in _connections)
+                {
+                    try
+                    {
+                        await connection.StopAsync();
+                    }
+                    catch {}
+                }
                 CalculateStatistics();
             }
             finally

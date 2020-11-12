@@ -206,6 +206,8 @@ namespace SignalRClient
 
         private static async Task StopJobAsync()
         {
+            var tasks = new List<Task>(_connections.Count);
+
             Log($"Stopping client.");
             if (_stopped || !await _lock.WaitAsync(0))
             {
@@ -216,12 +218,20 @@ namespace SignalRClient
             {
                 _stopped = true;
                 _workTimer.Stop();
+                foreach (var connection in _connections)
+                {
+                    tasks.Add(connection.DisposeAsync());
+                }
                 CalculateStatistics();
             }
             finally
             {
                 _lock.Release();
             }
+
+            await Task.WhenAll(tasks);
+
+            _httpClientHandler.DisposeAsync();
 
             BenchmarksEventSource.Log.Metadata("signalr/raw-errors", "all", "all", "Raw errors", "Raw errors", "object");
             BenchmarksEventSource.Measure("signalr/raw-errors", _errorStringBuilder.ToString());

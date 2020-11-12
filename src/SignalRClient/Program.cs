@@ -220,7 +220,7 @@ namespace SignalRClient
                 _workTimer.Stop();
                 foreach (var connection in _connections)
                 {
-                    tasks.Add(connection.DisposeAsync());
+                    tasks.Add(connection.DisposeAsync().AsTask());
                 }
                 CalculateStatistics();
             }

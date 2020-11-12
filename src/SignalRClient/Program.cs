@@ -231,7 +231,7 @@ namespace SignalRClient
 
             await Task.WhenAll(tasks);
 
-            _httpClientHandler.DisposeAsync();
+            _httpClientHandler.Dispose();
 
             BenchmarksEventSource.Log.Metadata("signalr/raw-errors", "all", "all", "Raw errors", "Raw errors", "object");
             BenchmarksEventSource.Measure("signalr/raw-errors", _errorStringBuilder.ToString());
